@@ -18,11 +18,32 @@ jobs:
               "blocks": [
                 {
                   "type": "section",
-                  "fields": [
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "CircleCI job rspec is finished. Check it out!"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "mrkdwn",
+                  "text": "*Author*: $CIRCLE_PR_USERNAME"
+                },
+                {
+                  "type": "mrkdwn",
+                  "text": "*Branch*: $CIRCLE_BRANCH"
+                },
+                {
+                  "type": "actions",
+                  "elements": [
                     {
-                      "type": "plain_text",
-                      "text": "*This is a text notification*",
-                      "emoji": true
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View PullRequest"
+                      },
+                      "url": "$CIRCLE_PULL_REQUEST"
                     }
                   ]
                 }
