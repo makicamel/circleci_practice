@@ -46,19 +46,6 @@ jobs:
                     "type": "mrkdwn",
                     "text": ":octocat: *URL*: $CIRCLE_PULL_REQUEST"
                   }
-                },
-                {
-                  "type": "actions",
-                  "elements": [
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "View PullRequest"
-                      },
-                      "url": "$CIRCLE_PULL_REQUEST"
-                    }
-                  ]
                 }
               ]
             }
