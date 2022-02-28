@@ -1,3 +1,3 @@
 CircleCI Practice
 
-hello, CircleCI
+Hello, CircleCI!
