@@ -25,6 +25,9 @@ jobs:
       - run:
           name: "Say hello"
           command: "echo Hello, World!"
+      - run:
+          name: "Make file"
+          command: "echo 'success' > /tmp/rspec.txt"
 
 commands:
   notify:
