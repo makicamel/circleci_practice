@@ -11,16 +11,13 @@ jobs:
   notify:
     docker:
       - image: "cimg/base:stable"
-    working_directory: /tmp
+    working_directory: ./tmp
     steps:
+      - attach_workspace:
+          at: .
       - run:
           name: "Foo!"
-          command: |
-            artifacts=$(curl -X GET "https://circleci.com/api/v2/project/gh/makicamel/circleci_practice/$CIRCLE_BUILD_NUM/artifacts" \
-            -H "Accept: application/json" \
-            -u "$CIRCLE_API_TOKEN:")
-            echo "export ARTIFACT_RESPONSE=$artifacts" >> $BASH_ENV
-            echo $ARTIFACT_RESPONSE
+          command: cat ./tmp/result.txt
       - notify
   save-status:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
@@ -29,7 +26,7 @@ jobs:
       - image: cimg/base:stable
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
-    working_directory: /tmp
+    working_directory: ./tmp
     steps:
       - run:
           name: "Say hello"
@@ -39,14 +36,18 @@ jobs:
           name: "Save success"
           when: on_success
           command: |
-            echo "success" > /tmp/result.txt
+            mkdir ./tmp/
+            echo "success" > ./tmp/result.txt
       - run:
           name: "Save fail"
           when: on_fail
           command: |
-            echo "fail" > /tmp/result.txt
-      - store_artifacts:
-          path: /tmp/result.txt
+            mkdir ./tmp/
+            echo "fail" > ./tmp/result.txt
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./tmp/result.txt
 
 commands:
   notify:
