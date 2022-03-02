@@ -12,6 +12,9 @@ jobs:
     docker:
       - image: "cimg/base:stable"
     steps:
+      - run:
+          name: "Foo!"
+          command: cat ./result.txt
       - notify
   say-hello:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
@@ -20,14 +23,15 @@ jobs:
       - image: cimg/base:stable
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+    working_directory: tmp
     steps:
       - checkout
       - run:
           name: "Say hello"
-          command: "echo Hello, World!"
-      - run:
-          name: "Make file"
-          command: "echo 'success' > /tmp/rspec.txt"
+          command: |
+            echo "Hello, World!" > tmp/result.txt
+      - store_artifacts:
+          path: ./result.txt
 
 commands:
   notify:
@@ -77,7 +81,7 @@ workflows:
   say-hello-workflow:
     jobs:
       - say-hello
-  send-notification:
-    jobs:
       - notify:
           context: slack-secrets
+          requires:
+            - say-hello
