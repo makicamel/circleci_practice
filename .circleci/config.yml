@@ -17,8 +17,12 @@ jobs:
           at: .
       - run:
           name: "Foo!"
-          command: cat ./tmp/result.txt
-      - notify
+          command: |
+            if grep "success" ./tmp/result.txt >/dev/null; then
+              notify_success
+            else
+              notify_fail
+            fi
   save-status:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
@@ -50,7 +54,7 @@ jobs:
             - ./tmp/result.txt
 
 commands:
-  notify:
+  notify_success:
     steps:
       - slack/notify:
           custom: |
@@ -60,7 +64,47 @@ commands:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":circleci: *CircleCI job rspec is finished :rocket:*"
+                    "text": ":circleci: *CircleCI job rspec is finished :green_circle: *"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":raised_hand: *Author*: $CIRCLE_PR_USERNAME(Blank if not forked)"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":wood: *Branch*: $CIRCLE_BRANCH"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":octocat: *URL*: $CIRCLE_PULL_REQUEST"
+                  }
+                }
+              ]
+            }
+          event: always
+  notify_fail:
+    steps:
+      - slack/notify:
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":circleci: *CircleCI job rspec is failed :red_circle:*"
                   }
                 },
                 {
