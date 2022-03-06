@@ -8,22 +8,7 @@ orbs:
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  notify:
-    docker:
-      - image: "cimg/base:stable"
-    working_directory: ./tmp
-    steps:
-      - attach_workspace:
-          at: .
-      - run:
-          name: "Foo!"
-          command: |
-            if grep "success" ./tmp/result.txt >/dev/null; then
-              notify_success
-            else
-              notify_fail
-            fi
-  save-status:
+  say-hi:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
@@ -42,6 +27,9 @@ jobs:
           command: |
             mkdir ./tmp/
             echo "success" > ./tmp/result.txt
+      - notify_success:
+          name: "Notify success"
+          when: on_success
       - run:
           name: "Save fail"
           when: on_fail
@@ -138,10 +126,6 @@ commands:
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  save-status-workflow:
+  say-hi-workflow:
     jobs:
-      - save-status
-      - notify:
-          context: slack-secrets
-          requires:
-            - save-status
+      - say-hi
