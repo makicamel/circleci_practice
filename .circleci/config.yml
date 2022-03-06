@@ -19,10 +19,80 @@ jobs:
           name: "Foo!"
           command: |
             if grep "success" ./tmp/result.txt >/dev/null; then
-              notify_success
+              echo success
             else
-              notify_fail
+              raise
             fi
+      - slack/notify:
+          event: pass
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":circleci: *CircleCI job rspec is passed* :large_green_circle:"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":raised_hand: *Author*: $CIRCLE_PR_USERNAME(Blank if not forked)"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":wood: *Branch*: $CIRCLE_BRANCH"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":octocat: *URL*: $CIRCLE_PULL_REQUEST"
+                  }
+                }
+              ]
+            }
+      - slack/notify:
+          event: fail
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":circleci: *CircleCI job rspec is failed* :red_circle:"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":raised_hand: *Author*: $CIRCLE_PR_USERNAME(Blank if not forked)"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":wood: *Branch*: $CIRCLE_BRANCH"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":octocat: *URL*: $CIRCLE_PULL_REQUEST"
+                  }
+                }
+              ]
+            }
   save-status:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
@@ -52,88 +122,6 @@ jobs:
           root: .
           paths:
             - ./tmp/result.txt
-
-commands:
-  notify_success:
-    steps:
-      - slack/notify:
-          custom: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": ":circleci: *CircleCI job rspec is finished :green_circle: *"
-                  }
-                },
-                {
-                  "type": "divider"
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": ":raised_hand: *Author*: $CIRCLE_PR_USERNAME(Blank if not forked)"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": ":wood: *Branch*: $CIRCLE_BRANCH"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": ":octocat: *URL*: $CIRCLE_PULL_REQUEST"
-                  }
-                }
-              ]
-            }
-          event: always
-  notify_fail:
-    steps:
-      - slack/notify:
-          custom: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": ":circleci: *CircleCI job rspec is failed :red_circle:*"
-                  }
-                },
-                {
-                  "type": "divider"
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": ":raised_hand: *Author*: $CIRCLE_PR_USERNAME(Blank if not forked)"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": ":wood: *Branch*: $CIRCLE_BRANCH"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": ":octocat: *URL*: $CIRCLE_PULL_REQUEST"
-                  }
-                }
-              ]
-            }
-          event: always
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
