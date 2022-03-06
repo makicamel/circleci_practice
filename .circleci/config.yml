@@ -27,23 +27,6 @@ jobs:
           command: |
             mkdir ./tmp/
             echo "success" > ./tmp/result.txt
-      - notify_success:
-          name: "Notify success"
-          when: on_success
-      - run:
-          name: "Save fail"
-          when: on_fail
-          command: |
-            mkdir ./tmp/
-            echo "fail" > ./tmp/result.txt
-      - persist_to_workspace:
-          root: .
-          paths:
-            - ./tmp/result.txt
-
-commands:
-  notify_success:
-    steps:
       - slack/notify:
           custom: |
             {
@@ -81,7 +64,20 @@ commands:
                 }
               ]
             }
-          event: always
+          event: pass
+
+      - run:
+          name: "Save fail"
+          when: on_fail
+          command: |
+            mkdir ./tmp/
+            echo "fail" > ./tmp/result.txt
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./tmp/result.txt
+
+commands:
   notify_fail:
     steps:
       - slack/notify:
