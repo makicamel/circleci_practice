@@ -39,14 +39,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":raised_hand: *Author*: $CIRCLE_PR_USERNAME(Blank if not forked)"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": ":octocat: *URL*: $CIRCLE_PULL_REQUEST"
+                    "text": ":raised_hand: *Author*: $CIRCLE_PR_USERNAME(Blank if not forked)\n:octocat: *URL*: $CIRCLE_PULL_REQUEST"
                   }
                 }
               ]
@@ -67,14 +60,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": ":raised_hand: *Author*: $CIRCLE_PR_USERNAME(Blank if not forked)"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": ":octocat: *URL*: $CIRCLE_PULL_REQUEST"
+                    "text": ":raised_hand: *Author*: $CIRCLE_PR_USERNAME(Blank if not forked)\n:octocat: *URL*: $CIRCLE_PULL_REQUEST"
                   }
                 }
               ]
